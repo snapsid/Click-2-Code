@@ -1,5 +1,6 @@
 import 'package:developer_assistant/ip.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class MyListFiles extends StatefulWidget {
@@ -14,7 +15,8 @@ class _MyListFilesState extends State<MyListFiles> {
   List files = [];
 
   void initApp() async {
-    var url = Uri.parse('http://${ip}/cgi-bin/listfiles/listfiles.py?x=sidd');
+    var url = Uri.parse(
+        'http://${ip}/cgi-bin/listfiles/listfiles.py?name=sidd&lan=python');
     try {
       var response = await http.get(url, headers: {
         "Accept": "application/json",
@@ -28,6 +30,7 @@ class _MyListFilesState extends State<MyListFiles> {
 
         setState(() {
           files = body.split('\n');
+          files.remove('');
         });
       } else {
         print('invalid IP');
@@ -46,63 +49,202 @@ class _MyListFilesState extends State<MyListFiles> {
     super.initState();
   }
 
+  myToast(mymsg, color) {
+    Fluttertoast.showToast(
+        msg: mymsg,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: color,
+        textColor: Colors.white,
+        webPosition: "center",
+        fontSize: 16.0);
+  }
+
+  onRenameFolder(index) {
+    var name = "";
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Rename Folder'),
+            contentPadding: EdgeInsets.only(top: 20, left: 24, right: 24),
+            titlePadding: EdgeInsets.only(top: 24, left: 24, right: 24),
+            content: TextField(
+              onChanged: (value) {
+                name = value;
+              },
+              decoration: InputDecoration(
+                hintText: "Enter Folder Name",
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.red),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    if (name != "") {
+                      // print(name);
+
+                      if (!files.contains(name))
+                        setState(() {
+                          files[index] = name;
+                          Navigator.pop(context);
+                        });
+                      else {
+                        myToast(
+                            'Folder with this name already exists', Colors.red);
+                      }
+                    } else {
+                      myToast('Enter folder name', Colors.red);
+                    }
+                  },
+                  child: Text('Create')),
+            ],
+          );
+        });
+  }
+
+  onCreateFolder() {
+    var name = "";
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Container(
+            child: AlertDialog(
+              title: Text('Create New Folder'),
+              content: TextField(
+                onChanged: (value) {
+                  name = value;
+                },
+                decoration: InputDecoration(
+                  hintText: "Enter Folder Name",
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+              ),
+              contentPadding: EdgeInsets.only(top: 20, left: 24, right: 24),
+              titlePadding: EdgeInsets.only(top: 24, left: 24, right: 24),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      if (name != "") {
+                        // print(name);
+
+                        if (!files.contains(name))
+                          setState(() {
+                            // files.add(name);
+                            Navigator.pop(context);
+                          });
+                        else {
+                          myToast(
+                              'File with this name already exists', Colors.red);
+                        }
+                      } else {
+                        myToast('Enter file name', Colors.red);
+                      }
+                    },
+                    child: Text('Create')),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Your files'),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            onCreateFolder();
+          },
+        ),
+      ),
       body: Container(
         child: ListView.builder(
             itemCount: files.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                child: Card(
-                  elevation: 5,
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 80,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 40,
-                        ),
-                        Icon(
-                          Icons.code,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 50,
-                        ),
-                        Text(
-                          files[index],
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Expanded(child: Container()),
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            icon: Icon(Icons.more_vert),
-                            items: <String>[
-                              'Rename',
-                              'Delete',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                if (value == 'Delete') {
-                                } else if (value == 'Rename') {}
-                              });
-                            },
+              return GestureDetector(
+                onTap: () {
+                  print(index);
+                },
+                child: Container(
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 80,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 40,
                           ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+                          Icon(
+                            Icons.code,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            files[index],
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Expanded(child: Container()),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              icon: Icon(Icons.more_vert),
+                              items: <String>[
+                                'Rename',
+                                'Delete',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String value) {
+                                setState(() {
+                                  if (value == 'Delete') {
+                                  } else if (value == 'Rename') {
+                                    onRenameFolder(index);
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
