@@ -5,6 +5,7 @@ import 'package:developer_assistant/cpp_output.dart';
 
 import 'package:developer_assistant/ip.dart';
 import 'package:developer_assistant/linux.dart';
+import 'package:developer_assistant/listfiles.dart';
 import 'package:developer_assistant/myhome.dart';
 import 'package:developer_assistant/python.dart';
 import 'package:developer_assistant/python_output.dart';
@@ -14,7 +15,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    initialRoute: 'home',
+    initialRoute: 'listfiles',
     routes: {
       'ip': (context) => MyIp(),
       'home': (context) => MyHome(),
@@ -25,6 +26,7 @@ void main() {
       'cppcode': (context) => MyCplusplus(),
       'cpp_output': (context) => Mycpp_output(),
       'linux': (context) => MyLinux(),
+      'listfiles': (context) => MyListFiles()
     },
   ));
 }
