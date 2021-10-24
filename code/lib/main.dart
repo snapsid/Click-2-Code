@@ -9,13 +9,14 @@ import 'package:developer_assistant/listfiles.dart';
 import 'package:developer_assistant/myhome.dart';
 import 'package:developer_assistant/python.dart';
 import 'package:developer_assistant/python_output.dart';
+import 'package:developer_assistant/pythoncode.dart';
 
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    initialRoute: 'listfiles',
+    initialRoute: 'home',
     routes: {
       'ip': (context) => MyIp(),
       'home': (context) => MyHome(),
@@ -26,7 +27,8 @@ void main() {
       'cppcode': (context) => MyCplusplus(),
       'cpp_output': (context) => Mycpp_output(),
       'linux': (context) => MyLinux(),
-      'listfiles': (context) => MyListFiles()
+      'listfiles': (context) => MyListFiles(),
+      'pythoncode': (context) => MyPythonCode(),
     },
   ));
 }

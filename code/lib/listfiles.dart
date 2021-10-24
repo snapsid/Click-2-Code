@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 class MyListFiles extends StatefulWidget {
   const MyListFiles({Key key}) : super(key: key);
 
+  static String data = "a";
+  static String filename = "a";
+
   @override
   _MyListFilesState createState() => _MyListFilesState();
 }
@@ -31,6 +34,8 @@ class _MyListFilesState extends State<MyListFiles> {
         setState(() {
           files = body.split('\n');
           files.remove('');
+          files.remove('a.sh');
+          files.remove('a');
         });
       } else {
         print('invalid IP');
@@ -173,6 +178,37 @@ class _MyListFilesState extends State<MyListFiles> {
         });
   }
 
+  onReadFile(index) async {
+    var file = files[index];
+
+    MyListFiles.filename = file;
+
+    var url = Uri.parse(
+        'http://${ip}/cgi-bin/listfiles/readfile.py?name=sidd&lan=python&file=$file');
+    try {
+      var response = await http.get(url, headers: {
+        "Accept": "application/json",
+        "Access-Control_Allow_Origin": "*"
+      });
+      var code = response.statusCode;
+      print(code);
+      if (code == 200) {
+        var body = response.body;
+        print(body);
+
+        setState(() {
+          body = body.replaceAll('<<<', '"');
+          MyListFiles.data = body;
+        });
+        Navigator.pushNamed(context, 'pythoncode');
+      } else {
+        print('invalid IP');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,6 +230,7 @@ class _MyListFilesState extends State<MyListFiles> {
               return GestureDetector(
                 onTap: () {
                   print(index);
+                  onReadFile(index);
                 },
                 child: Container(
                   child: Card(

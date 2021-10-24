@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class MyIp extends StatefulWidget {
-  static String ip_public = "13.235.244.11";
+  static String ip_public = "3.109.152.243";
   @override
   _MyIpState createState() => _MyIpState();
 }

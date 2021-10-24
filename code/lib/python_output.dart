@@ -1,4 +1,5 @@
 import 'package:developer_assistant/python.dart';
+import 'package:developer_assistant/pythoncode.dart';
 import 'package:flutter/material.dart';
 
 class MyPythonOutput extends StatefulWidget {
@@ -11,7 +12,7 @@ class _MyPythonOutputState extends State<MyPythonOutput> {
 
   @override
   void initState() {
-    output = MyPython.python_op;
+    output = MyPythonCode.python_op;
     // TODO: implement initState
     super.initState();
   }
