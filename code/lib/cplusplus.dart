@@ -10,6 +10,7 @@ import 'package:flutter_highlight/themes/vs.dart';
 import 'package:flutter_highlight/themes/darcula.dart';
 
 import 'ip.dart';
+import 'listfiles.dart';
 
 class MyCplusplus extends StatefulWidget {
   static String c_op;
@@ -24,8 +25,11 @@ class _MyCplusplusState extends State<MyCplusplus> {
 
   @override
   Widget build(BuildContext context) {
-    var source =
-        '#include<iostream>\nusing namespace std;\n int main(){\n cout<<"hello cpp";\n}';
+    // var source =
+    //     '#include<iostream>\nusing namespace std;\n int main(){\n cout<<"hello cpp";\n}';
+
+    var source = MyListFiles.data;
+    var file = MyListFiles.filename;
     var finalCode = "heyyy";
     _codeController = CodeController(
         text: source, language: cpp, theme: a, webSpaceFix: false);
@@ -39,7 +43,8 @@ class _MyCplusplusState extends State<MyCplusplus> {
       print(cmd);
       ip = MyIp.ip_public;
       // var url = Uri.parse('http://${ip}/cgi-bin/python/terminal.py');
-      var url = Uri.parse('http://${ip}/cgi-bin/cpp_code/terminal.py?x=$cmd');
+      var url = Uri.parse(
+          'http://${ip}/cgi-bin/listfiles/cppcode.py?name=sidd&lan=cpp&file=$file&x=$cmd');
       try {
         var response = await http.get(url, headers: {
           "Accept": "application/json",

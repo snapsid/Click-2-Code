@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
+import 'myhome.dart';
+
 class MyListFiles extends StatefulWidget {
   const MyListFiles({Key key}) : super(key: key);
 
@@ -16,10 +18,11 @@ class MyListFiles extends StatefulWidget {
 class _MyListFilesState extends State<MyListFiles> {
   String ip;
   List files = [];
+  var language = MyHome.language;
 
   void initApp() async {
     var url = Uri.parse(
-        'http://${ip}/cgi-bin/listfiles/listfiles.py?name=sidd&lan=python');
+        'http://${ip}/cgi-bin/listfiles/listfiles.py?name=sidd&lan=$language');
     try {
       var response = await http.get(url, headers: {
         "Accept": "application/json",
@@ -36,6 +39,7 @@ class _MyListFilesState extends State<MyListFiles> {
           files.remove('');
           files.remove('a.sh');
           files.remove('a');
+          files.removeWhere((element) => element.toString().endsWith('.out'));
         });
       } else {
         print('invalid IP');
@@ -184,7 +188,7 @@ class _MyListFilesState extends State<MyListFiles> {
     MyListFiles.filename = file;
 
     var url = Uri.parse(
-        'http://${ip}/cgi-bin/listfiles/readfile.py?name=sidd&lan=python&file=$file');
+        'http://${ip}/cgi-bin/listfiles/readfile.py?name=sidd&lan=$language&file=$file');
     try {
       var response = await http.get(url, headers: {
         "Accept": "application/json",
@@ -200,7 +204,13 @@ class _MyListFilesState extends State<MyListFiles> {
           body = body.replaceAll('<<<', '"');
           MyListFiles.data = body;
         });
-        Navigator.pushNamed(context, 'pythoncode');
+        if (language == 'python') {
+          Navigator.pushNamed(context, 'pythoncode');
+        } else if (language == 'c') {
+          Navigator.pushNamed(context, 'ccode');
+        } else if (language == 'cpp') {
+          Navigator.pushNamed(context, 'cppcode');
+        }
       } else {
         print('invalid IP');
       }

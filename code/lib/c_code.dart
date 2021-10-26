@@ -10,6 +10,7 @@ import 'package:flutter_highlight/themes/vs.dart';
 import 'package:flutter_highlight/themes/darcula.dart';
 
 import 'ip.dart';
+import 'listfiles.dart';
 
 class MyC_code extends StatefulWidget {
   static String c_op;
@@ -24,8 +25,16 @@ class _MyC_codeState extends State<MyC_code> {
 
   @override
   Widget build(BuildContext context) {
-    var source =
-        '#include<stdio.h>\n int main(){\n printf("hello world");\n return 0;\n}';
+    // var source =
+    //     '#include<stdio.h>\n int main(){\n printf("hello world");\n return 0;\n}';
+    var source = MyListFiles.data;
+
+    // source = source.toString().replaceAll('??', '#');
+    // source = source.toString().replaceAll('@@', ';');
+    // source = source.toString().replaceAll('.?', '+');
+    // source = source.toString().replaceAll('"', "'");
+
+    var file = MyListFiles.filename;
     var finalCode = "heyyy";
     _codeController = CodeController(
         text: source, language: cpp, theme: a, webSpaceFix: false);
@@ -39,7 +48,8 @@ class _MyC_codeState extends State<MyC_code> {
       print(cmd);
       ip = MyIp.ip_public;
       // var url = Uri.parse('http://${ip}/cgi-bin/python/terminal.py');
-      var url = Uri.parse('http://${ip}/cgi-bin/c_code/terminal.py?x=$cmd');
+      var url = Uri.parse(
+          'http://${ip}/cgi-bin/listfiles/ccode.py?name=sidd&lan=c&file=$file&x=$cmd');
       try {
         var response = await http.get(url, headers: {
           "Accept": "application/json",

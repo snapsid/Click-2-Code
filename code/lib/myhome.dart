@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vertical_card_pager/vertical_card_pager.dart';
 
 class MyHome extends StatefulWidget {
+  static String language = "";
   @override
   _MyHomeState createState() => _MyHomeState();
 }
@@ -110,11 +111,14 @@ class _MyHomeState extends State<MyHome> {
                     onSelectedItem: (index) {
                       print(index);
                       if (index == 0) {
-                        Navigator.pushNamed(context, 'python');
+                        MyHome.language = "python";
+                        Navigator.pushNamed(context, 'listfiles');
                       } else if (index == 1) {
+                        MyHome.language = "c";
                         Navigator.pushNamed(context, 'listfiles');
                       } else if (index == 2) {
-                        Navigator.pushNamed(context, 'cppcode');
+                        MyHome.language = "cpp";
+                        Navigator.pushNamed(context, 'listfiles');
                       } else if (index == 3) {
                         Navigator.pushNamed(context, 'linux');
                       }

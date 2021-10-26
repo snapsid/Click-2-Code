@@ -12,6 +12,7 @@ class _MyC_outputState extends State<MyC_output> {
   @override
   void initState() {
     output = MyC_code.c_op;
+    print("oo: $output");
 
     // TODO: implement initState
     super.initState();
